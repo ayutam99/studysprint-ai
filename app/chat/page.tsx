@@ -26,6 +26,7 @@ export default function ChatPage() {
 
   const send = (text: string) => {
     if (!text.trim()) return;
+    if (timerRef.current) clearTimeout(timerRef.current);
     setMessages((m) => [...m, { role: 'student', text, time: clock() }]);
     setInput('');
     setTyping(true);
