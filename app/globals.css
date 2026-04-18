@@ -1,0 +1,108 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+}
+
+html,
+body {
+  @apply bg-bg text-slate-100 scroll-smooth antialiased;
+}
+
+body {
+  background-image: radial-gradient(circle at 20% -10%, rgba(79, 172, 254, 0.35), transparent 28%),
+    radial-gradient(circle at 80% -5%, rgba(159, 122, 234, 0.32), transparent 38%),
+    linear-gradient(120deg, #060812 0%, #070c1b 55%, #060812 100%);
+}
+
+*:focus-visible {
+  @apply outline-none ring-2 ring-neonBlue ring-offset-2 ring-offset-bg;
+}
+
+.glass {
+  @apply border border-white/15 bg-white/[0.06] backdrop-blur-xl;
+}
+
+.section-title {
+  @apply text-3xl font-bold md:text-4xl;
+}
+
+.gradient-text {
+  @apply bg-gradient-to-r from-neonBlue via-cyan-300 to-neonPurple bg-clip-text text-transparent;
+  background-size: 200% auto;
+  animation: gradientShift 5s linear infinite;
+}
+
+.card-glow {
+  box-shadow: 0 14px 34px rgba(79, 172, 254, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+.hero-orb {
+  position: absolute;
+  border-radius: 999px;
+  filter: blur(18px);
+  opacity: 0.35;
+  animation: floatY 6s ease-in-out infinite;
+}
+
+.shimmer {
+  position: relative;
+  overflow: hidden;
+}
+
+.shimmer::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(110deg, transparent 0%, rgba(255, 255, 255, 0.14) 45%, transparent 100%);
+  transform: translateX(-100%);
+  animation: shimmer 2.2s infinite;
+}
+
+.particle {
+  position: absolute;
+  border-radius: 9999px;
+  background: radial-gradient(circle, rgba(79, 172, 254, 0.6), rgba(79, 172, 254, 0));
+  width: 8px;
+  height: 8px;
+  animation: drift 10s linear infinite;
+}
+
+.particle-1 {
+  top: 20%;
+  left: 10%;
+}
+
+.particle-2 {
+  top: 55%;
+  left: 75%;
+  animation-duration: 12s;
+}
+
+.particle-3 {
+  top: 80%;
+  left: 40%;
+  animation-duration: 9s;
+}
+
+@keyframes gradientShift {
+  0% { background-position: 0% center; }
+  100% { background-position: 200% center; }
+}
+
+@keyframes floatY {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-14px); }
+}
+
+@keyframes shimmer {
+  100% { transform: translateX(100%); }
+}
+
+@keyframes drift {
+  0% { transform: translateY(0) scale(1); opacity: 0; }
+  20% { opacity: 0.8; }
+  100% { transform: translateY(-120px) scale(1.6); opacity: 0; }
+}
