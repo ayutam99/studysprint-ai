@@ -5,7 +5,6 @@ import confetti from 'canvas-confetti';
 import toast from 'react-hot-toast';
 import { AnimatedCard } from '@/components/animated-card';
 import { PageShell } from '@/components/page-shell';
-import { Reveal } from '@/components/reveal';
 import { quizQuestions } from '@/data/demo-data';
 
 export default function QuizPage() {
@@ -16,7 +15,6 @@ export default function QuizPage() {
 
   const done = idx >= quizQuestions.length || seconds <= 0;
   const score = useMemo(() => answers.filter((a, i) => a === quizQuestions[i].answer).length, [answers]);
-  const urgency = seconds <= 60;
 
   useEffect(() => {
     if (done) return;
@@ -26,7 +24,7 @@ export default function QuizPage() {
 
   useEffect(() => {
     if (done && score >= 4) {
-      confetti({ particleCount: 180, spread: 88, origin: { y: 0.6 } });
+      confetti({ particleCount: 160, spread: 80, origin: { y: 0.6 } });
       toast.success('Amazing score! 🎉');
     }
   }, [done, score]);
@@ -35,7 +33,8 @@ export default function QuizPage() {
     const onKey = (event: KeyboardEvent) => {
       if (done) return;
       if (event.key >= '1' && event.key <= '4') {
-        setSelected(Number(event.key) - 1);
+        const option = Number(event.key) - 1;
+        setSelected(option);
       }
       if (event.key === 'Enter' && selected !== null) {
         submitAnswer();
@@ -64,61 +63,58 @@ export default function QuizPage() {
 
   return (
     <PageShell>
-      <Reveal>
-        <div className="space-y-6">
-          <h1 className="section-title">Quiz Sprint</h1>
+      <div className="space-y-6">
+        <h1 className="section-title">Quiz Sprint</h1>
+        <AnimatedCard>
+          <div className="mb-2 flex justify-between text-sm">
+            <span>Timer: {Math.max(seconds, 0)}s</span>
+            <span>
+              {Math.min(idx + 1, quizQuestions.length)}/{quizQuestions.length}
+            </span>
+          </div>
+          <div className="h-2 rounded-full bg-white/10">
+            <div className="h-2 rounded-full bg-neonBlue transition-all" style={{ width: `${(Math.min(idx, quizQuestions.length) / quizQuestions.length) * 100}%` }} />
+          </div>
+        </AnimatedCard>
 
+        {!done ? (
           <AnimatedCard>
-            <div className="mb-2 flex justify-between text-sm">
-              <span className={urgency ? 'animate-pulse text-rose-300' : ''}>Timer: {Math.max(seconds, 0)}s</span>
-              <span>
-                {Math.min(idx + 1, quizQuestions.length)}/{quizQuestions.length}
-              </span>
+            <h2 className="text-xl font-semibold">{quizQuestions[idx].question}</h2>
+            <p className="mt-1 text-xs text-slate-400">Tip: press keys 1-4 to select, Enter to submit.</p>
+            <div className="mt-4 grid gap-2">
+              {quizQuestions[idx].options.map((opt, i) => (
+                <button
+                  key={opt}
+                  onClick={() => setSelected(i)}
+                  className={`rounded-xl border px-4 py-3 text-left ${selected === i ? 'border-neonBlue bg-neonBlue/10' : 'border-white/15 hover:bg-white/10'}`}
+                >
+                  {i + 1}. {opt}
+                </button>
+              ))}
             </div>
-            <div className="h-2 rounded-full bg-white/10">
-              <div className="h-2 rounded-full bg-gradient-to-r from-neonBlue to-neonPurple transition-all duration-500" style={{ width: `${(Math.min(idx, quizQuestions.length) / quizQuestions.length) * 100}%` }} />
+            <button onClick={submitAnswer} className="mt-4 rounded-xl bg-gradient-to-r from-neonBlue to-neonPurple px-4 py-2 font-semibold">
+              Next Question
+            </button>
+          </AnimatedCard>
+        ) : (
+          <AnimatedCard>
+            <h2 className="text-2xl font-bold">Final Score: {score}/{quizQuestions.length}</h2>
+            <p className="mt-2 text-slate-300">{score >= 4 ? 'Outstanding! You are exam-ready.' : 'Good effort—revise weak areas and retry.'}</p>
+            <button onClick={resetQuiz} className="mt-3 rounded-lg border border-white/20 px-4 py-2 hover:bg-white/10">
+              Retry Quiz
+            </button>
+            <div className="mt-4 space-y-3">
+              {quizQuestions.map((q) => (
+                <div key={q.question} className="rounded-xl border border-white/15 p-3">
+                  <p className="font-medium">{q.question}</p>
+                  <p className="text-sm text-slate-300">Correct: {q.options[q.answer]}</p>
+                  <p className="text-xs text-slate-400">{q.explanation}</p>
+                </div>
+              ))}
             </div>
           </AnimatedCard>
-
-          {!done ? (
-            <AnimatedCard>
-              <h2 className="text-xl font-semibold">{quizQuestions[idx].question}</h2>
-              <p className="mt-1 text-xs text-slate-400">Tip: press keys 1-4 to select, Enter to submit.</p>
-              <div className="mt-4 grid gap-2">
-                {quizQuestions[idx].options.map((opt, i) => (
-                  <button
-                    key={opt}
-                    onClick={() => setSelected(i)}
-                    className={`rounded-xl border px-4 py-3 text-left transition ${selected === i ? 'border-neonBlue bg-neonBlue/10 shadow-[0_0_20px_rgba(79,172,254,0.25)]' : 'border-white/15 hover:bg-white/10'}`}
-                  >
-                    {i + 1}. {opt}
-                  </button>
-                ))}
-              </div>
-              <button onClick={submitAnswer} className="mt-4 rounded-xl bg-gradient-to-r from-neonBlue to-neonPurple px-4 py-2 font-semibold transition hover:scale-[1.02]">
-                Next Question
-              </button>
-            </AnimatedCard>
-          ) : (
-            <AnimatedCard>
-              <h2 className="text-2xl font-bold">Final Score: {score}/{quizQuestions.length}</h2>
-              <p className="mt-2 text-slate-300">{score >= 4 ? 'Outstanding! You are exam-ready.' : 'Good effort—revise weak areas and retry.'}</p>
-              <button onClick={resetQuiz} className="mt-3 rounded-lg border border-white/20 px-4 py-2 hover:bg-white/10">
-                Retry Quiz
-              </button>
-              <div className="mt-4 space-y-3">
-                {quizQuestions.map((q) => (
-                  <div key={q.question} className="rounded-xl border border-white/15 p-3">
-                    <p className="font-medium">{q.question}</p>
-                    <p className="text-sm text-neonBlue">Correct: {q.options[q.answer]}</p>
-                    <p className="text-xs text-slate-400">{q.explanation}</p>
-                  </div>
-                ))}
-              </div>
-            </AnimatedCard>
-          )}
-        </div>
-      </Reveal>
+        )}
+      </div>
     </PageShell>
   );
 }
