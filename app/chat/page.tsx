@@ -13,7 +13,9 @@ const aiReply = (q: string) =>
   `Great question. For "${q}", revise the definition first, then one core principle, and finally one exam example. I can also create 3 viva follow-ups.`;
 
 export default function ChatPage() {
-  const [messages, setMessages] = useState<Message[]>([{ role: 'ai', text: 'Hi! I am StudySprint AI. Ask any exam doubt.', time: clock() }]);
+  const [messages, setMessages] = useState<Message[]>([
+    { role: 'ai', text: 'Hi! I am StudySprint AI. Ask any exam doubt.', time: clock() },
+  ]);
   const [input, setInput] = useState('');
   const [typing, setTyping] = useState(false);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -26,10 +28,13 @@ export default function ChatPage() {
 
   const send = (text: string) => {
     if (!text.trim()) return;
+
     if (timerRef.current) clearTimeout(timerRef.current);
+
     setMessages((m) => [...m, { role: 'student', text, time: clock() }]);
     setInput('');
     setTyping(true);
+
     timerRef.current = setTimeout(() => {
       setMessages((m) => [...m, { role: 'ai', text: aiReply(text), time: clock() }]);
       setTyping(false);
@@ -40,14 +45,19 @@ export default function ChatPage() {
     <PageShell>
       <div className="space-y-6">
         <h1 className="section-title">Ask Doubts Chatbot</h1>
+
         <AnimatedCard>
           <div className="max-h-[420px] space-y-3 overflow-y-auto pr-1">
             {messages.map((m, i) => (
-              <div key={`${m.text}-${i}`} className={`w-fit max-w-[90%] rounded-2xl px-4 py-3 ${m.role === 'student' ? 'ml-auto bg-neonBlue/20' : 'bg-white/10'}`}>
+              <div
+                key={`${m.text}-${i}`}
+                className={`w-fit max-w-[90%] rounded-2xl px-4 py-3 ${m.role === 'student' ? 'ml-auto bg-neonBlue/20' : 'bg-white/10'}`}
+              >
                 <p>{m.text}</p>
                 <p className="mt-1 text-[11px] text-slate-400">{m.time}</p>
               </div>
             ))}
+
             {typing && <p className="text-sm text-slate-400">AI is typing...</p>}
           </div>
 

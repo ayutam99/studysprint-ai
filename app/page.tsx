@@ -28,11 +28,14 @@ export default function HomePage() {
     <PageShell>
       <section className="grid items-center gap-8 py-12 md:grid-cols-2">
         <div className="space-y-5">
-          <p className="w-fit rounded-full border border-neonBlue/40 bg-neonBlue/10 px-3 py-1 text-sm text-neonBlue">Trusted for last-minute exam prep</p>
+          <p className="w-fit rounded-full border border-neonBlue/40 bg-neonBlue/10 px-3 py-1 text-sm text-neonBlue">
+            Trusted for last-minute exam prep
+          </p>
           <h1 className="text-5xl font-black leading-tight md:text-6xl">
             Exam Tomorrow? <span className="gradient-text">Start Now.</span>
           </h1>
           <p className="text-lg text-slate-300">Upload notes, generate summaries, quizzes, flashcards and pass smarter.</p>
+
           <div className="flex flex-wrap gap-3">
             <Link href="/dashboard" className="rounded-xl bg-gradient-to-r from-neonBlue to-neonPurple px-5 py-3 font-semibold transition hover:scale-[1.02]">
               Start Free
@@ -41,6 +44,7 @@ export default function HomePage() {
               Emergency Prep
             </Link>
           </div>
+
           <div className="grid grid-cols-2 gap-3 pt-3 sm:grid-cols-4">
             {trustStats.map((item) => (
               <div key={item.label} className="rounded-xl border border-white/10 bg-white/5 p-3 text-center">
@@ -84,7 +88,7 @@ export default function HomePage() {
         </AnimatedCard>
         <AnimatedCard>
           <h3 className="mb-2 text-xl font-semibold">Testimonials</h3>
-          <p className="text-slate-300">“I revised 3 chapters in one night and scored 84%.” — Aarav, B.Tech.</p>
+          <p className="text-slate-300">“I revised 3 chapters in one night and scored 84%." — Aarav, B.Tech.</p>
         </AnimatedCard>
       </section>
 
